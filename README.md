@@ -9,13 +9,13 @@
 ## 🍹 기술 스택
 |구분|항목|
 |---|---|
-|Server||
+|Server|AWS|
 |Framework|Django|
 |DB|MySQL|
 |search engine|ElasticSearch|
-|CI/CD|Jenkins|
-|CI/CD|Docker|
+|CI/CD|Jenkins & Docker|
 |Language|python3.8|
 |IDE|visual studio code|
 
-## 🥃 시스템 아키텍쳐
+## 🥃 아키텍쳐
+<img width="400" src="https://user-images.githubusercontent.com/64643665/179388018-c254d7cc-629b-40dd-bcc9-e909a8605f30.png">
