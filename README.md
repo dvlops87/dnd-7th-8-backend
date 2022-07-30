@@ -22,4 +22,4 @@
 
 
 ## 🥃 DB
-<img width="1000", src="https://user-images.githubusercontent.com/64643665/181875378-c62754fa-c6a4-447a-bb23-32b8eb6b8b5f.png">
+<img width="1000" src="https://user-images.githubusercontent.com/64643665/181875378-c62754fa-c6a4-447a-bb23-32b8eb6b8b5f.png">
