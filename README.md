@@ -3,7 +3,7 @@
 
 | [<img src="https://github.com/youngDaLee.png" width="100">](https://github.com/youngDaLee) | [<img src="https://github.com/dvlops87.png" width="100">](https://github.com/dvlops87) |
 | :--------: | :--------: |
-| [이다영](https://github.com/youngDaLee) | [정현](https://github.com/dvlops87) |
+| [이다영](https://github.com/youngDaLee) | [성현](https://github.com/dvlops87) |
 
 
 ## 🍹 기술 스택
