@@ -1,4 +1,4 @@
-CREATE DEFINER=`adminadmin`@`%` PROCEDURE `sp_drink_comment_select` (
+CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_drink_comment_select` (
      IN i_drink_id      VARCHAR(40)     -- 음료ID
     ,OUT `o_out_code`   SMALLINT
 )
