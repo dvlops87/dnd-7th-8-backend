@@ -184,18 +184,17 @@ def mypage(request) :
         sql_update = "select nickname, birth, profile, email, platform from mazle_user where customer_uuid=%s"
         curs.execute(sql_update,payload['id'])
         rows = curs.fetchall()
-        oo = base64.decodebytes(rows[0]['profile'])
+        oo = base64.decodebytes(rows[0]['profile']).decode('latin_1')
         conn.close()
         data = {
             "nickname" : rows[0]['nickname'],
             "birth" : rows[0]['birth'],
-            "profile" : rows[0]['profile'],
+            "profile" : oo,
             "email" : rows[0]['email'],
             "platform" : rows[0]['platform'],
         }
         # SQL에 저장된 파일 읽을 때
-        f = open("imageToSave.png",'wb')
-        # f.write(base64.decodebytes(bytes(rows[0]['profile'])))
-        f.write(oo)
-        f.close()
+        # f = open("imageToSave.png",'wb')
+        # f.write(oo.encode('latin_1'))
+        # f.close()
         return JsonResponse({'data' : data})
