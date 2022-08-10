@@ -1,4 +1,4 @@
-CREATE DEFINER=`adminadmin`@`%` PROCEDURE `sp_recipe_comment_select` (
+CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_comment_select` (
      IN i_recipe_id     VARCHAR(40)     -- 레시피ID
     ,OUT `o_out_code`   SMALLINT
 )
