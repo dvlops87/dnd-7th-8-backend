@@ -17,7 +17,6 @@ import sys
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_BASE_FILE = os.path.join(BASE_DIR, 'secrets.json')
@@ -36,7 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'user_app.User'
+AUTH_USER_MODEL = 'user_app.MazleUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -125,7 +124,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'customer_uuid',
-    'USER_ID_CLAIM': 'user_id',
+    'USER_ID_CLAIM': 'customer_uuid',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
