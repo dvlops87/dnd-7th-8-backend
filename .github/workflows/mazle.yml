@@ -36,7 +36,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.KEY }}
-          script: mkdir -p /usr/share/Mazle
+          script: sudo mkdir -p /usr/share/Mazle
 
       - name: copy source via ssh key
         uses: burnett01/rsync-deployments@4.1
@@ -56,4 +56,4 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            ****sh /usr/share/Mazle/drinking_pleasure/config/deploy.sh
+            ****sudo sh /usr/share/Mazle/drinking_pleasure/config/deploy.sh
