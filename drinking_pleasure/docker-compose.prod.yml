@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     command: gunicorn drinking_pleasure.wsgi:application --bind 0.0.0.0:8000
     environment:
-      DJANGO_SETTINGS_MODULE: drinking_pleasure.settings.prod
+      DJANGO_SETTINGS_MODULE: drinking_pleasure.prod
     env_file:
       - .env
     volumes:
