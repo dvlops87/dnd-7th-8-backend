@@ -5,10 +5,10 @@ services:
     container_name: web
     build:
       context: ./
-      dockerfile: Dockerfile.prod
-    command: gunicorn dnd_7th_4_backend.wsgi:application --bind 0.0.0.0:8000
+      dockerfile: Dockerfile
+    command: gunicorn drinking_pleasure.wsgi:application --bind 0.0.0.0:8000
     environment:
-      DJANGO_SETTINGS_MODULE: dnd_7th_4_backend.settings.prod
+      DJANGO_SETTINGS_MODULE: drinking_pleasure.settings.prod
     env_file:
       - .env
     volumes:

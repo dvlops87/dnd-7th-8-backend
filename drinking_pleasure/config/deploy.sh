@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cp /home/ubuntu/my_settings.py /usr/share/Mazle/drinking_pleasure/drinking_pleasure/
+
 # Installing docker engine if not exists
 if ! type docker > /dev/null #docker를 깔아주는 코드, EC2 인스턴스에는 아무것도 없기 때문에 직접 깔아줘야 한다.
 then
@@ -24,4 +26,4 @@ then
 fi
 
 echo "start docker-compose up: ubuntu"
-sudo docker-compose -f /usr/share/Mazle/drinking_pleasure/config/docker-compose.prod.yml up --build -d
+sudo docker-compose -f /usr/share/Mazle/drinking_pleasure/docker-compose.prod.yml up --build -d
