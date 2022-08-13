@@ -1,20 +1,10 @@
 version: '3'
 services:
-
-  db:
-    container_name: db
-    image: mariadb:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: mysql
-    expose:
-      - 3306
-    ports:
-      - "3307:3306"
-    env_file:
-      - .env
+  nginx:
+    container_name: nginx
+    build: ./config/nginx
     volumes:
+<<<<<<< HEAD
       - dbdata:/var/lib/mysql
 
   web:
@@ -30,12 +20,19 @@ services:
       DATABASE_HOST: db
       DJANGO_SETTINGS_MODULE: drinking_pleasure.dev
     restart: always
+=======
+      - .:/code
+>>>>>>> 061d6269c0ef8736fc7f9f7b58f584685256bfa7
     ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
+      - "80:80"
     depends_on:
-      - db
-volumes:
-  app:
-  dbdata:
+      - web
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn drinking_pleasure.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000"
