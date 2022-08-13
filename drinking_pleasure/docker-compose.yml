@@ -5,7 +5,7 @@ services:
     build: ./config/nginx
     volumes:
       - .:/code
-      - ./nginx/nginx:/etc/nginx.conf.d
+      - ./config/nginx:/etc/nginx.conf.d
     ports:
       - "80:80"
     depends_on:
