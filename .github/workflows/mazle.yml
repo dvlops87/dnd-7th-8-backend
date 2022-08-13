@@ -54,6 +54,6 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
-        key: ${{ secrets.KEY }}
-        script: |
-          ****sh /usr/share/Mazle/drinking_pleasure/config/deploy.sh
+          key: ${{ secrets.KEY }}
+          script: |
+            ****sh /usr/share/Mazle/drinking_pleasure/config/deploy.sh
