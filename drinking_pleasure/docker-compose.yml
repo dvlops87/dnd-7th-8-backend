@@ -4,11 +4,13 @@ services:
     container_name: nginx
     build: ./config/nginx
     volumes:
-      - .:/code
+      - static:/home/app/web/static
+      - media:/home/app/web/media
     ports:
       - "80:80"
     depends_on:
       - web
+
   web:
     build:
       context: .
