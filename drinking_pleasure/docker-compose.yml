@@ -28,7 +28,7 @@ services:
       DATABASE_PASSWORD: mysql
       DATABASE_PORT: 3306
       DATABASE_HOST: db
-      DJANGO_SETTINGS_MODULE: dnd_7th_8_backend.settings.dev
+      DJANGO_SETTINGS_MODULE: drinking_pleasure.settings.dev
     restart: always
     ports:
       - "8000:8000"
