@@ -19,12 +19,15 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_BASE_FILE = os.path.join(BASE_DIR, 'secrets.json')
 
 #secret.json 읽기
-secrets = json.loads(open(SECRET_BASE_FILE).read())
-for key, value in secrets.items():
-    setattr(sys.modules[__name__], key, value)
+from .my_settings import MY_SECRET, MY_DATABASES, MY_DBCONFIG
+
+SECRET_KEY = MY_SECRET['SECRET_KEY']
+
+DATABASES = MY_DATABASES
+
+DBCONFIG = MY_DBCONFIG
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -33,9 +36,10 @@ for key, value in secrets.items():
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
-AUTH_USER_MODEL = 'user_app.MazleUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -147,16 +151,6 @@ SIMPLE_JWT = {
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'test',
-        'USER':'admin1234',
-        'PASSWORD':'admin1234',
-        'HOST':'database-1.cvip8q7p6e3c.ap-northeast-2.rds.amazonaws.com',
-        'PORT':'3306'
-    }
-}
 
 
 # Password validation
