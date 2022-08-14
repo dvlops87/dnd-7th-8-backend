@@ -1,41 +1,21 @@
 version: '3'
 services:
-
-  db:
-    container_name: db
-    image: mariadb:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: mysql
-    expose:
-      - 3306
-    ports:
-      - "3307:3306"
-    env_file:
-      - .env
+  nginx:
+    container_name: nginx
+    build: ./config/nginx
     volumes:
-      - dbdata:/var/lib/mysql
+      - .:/code
+    ports:
+      - "80:80"
+    depends_on:
+      - web
 
   web:
-    container_name: web
-    build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    environment:
-      MYSQL_ROOT_PASSWORD: mysql
-      DATABASE_NAME: mysql
-      DATABASE_USER: 'root'
-      DATABASE_PASSWORD: mysql
-      DATABASE_PORT: 3306
-      DATABASE_HOST: db
-      DJANGO_SETTINGS_MODULE: drinking_pleasure.settings.dev
-    restart: always
-    ports:
-      - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn drinking_pleasure.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - .:/app
-    depends_on:
-      - db
-volumes:
-  app:
-  dbdata:
+      - .:/code
+    ports:
+      - "8000"

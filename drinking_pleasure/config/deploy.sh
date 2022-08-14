@@ -26,4 +26,4 @@ then
 fi
 
 echo "start docker-compose up: ubuntu"
-sudo docker-compose -f /usr/share/Mazle/drinking_pleasure/docker-compose.prod.yml up --build -d
+sudo docker-compose -f /usr/share/Mazle/drinking_pleasure/docker-compose.yml up --build -d
