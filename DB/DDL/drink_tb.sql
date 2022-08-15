@@ -7,7 +7,7 @@ CREATE TABLE drink(
     `calorie`           INTEGER         NOT NULL    COMMENT '칼로리',
     `manufacture`       VARCHAR(255)    NOT NULL    COMMENT '제조사',
     `price`             INTEGER         NOT NULL    COMMENT '예상가격',
-    `lagrge_category`   VARCHAR(50)     NOT NULL    COMMENT '대분류',
+    `large_category`   VARCHAR(50)     NOT NULL    COMMENT '대분류',
     `medium_category`   VARCHAR(50)     NOT NULL    COMMENT '중분류',
     `small_category`    VARCHAR(50)     NOT NULL    COMMENT '소분류',
     `img`               LONGBLOB                    COMMENT '이미지',
