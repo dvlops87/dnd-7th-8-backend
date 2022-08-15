@@ -21,24 +21,24 @@ CREATE TABLE drink(
 CREATE TABLE drink_allergy(
     `drink_id`         INTEGER         NOT NULL    COMMENT '음료ID',
     `allergy`          VARCHAR(255)    NOT NULL    COMMENT '알레르기',
-    PRIMARY KEY (`drink_id`)
+    PRIMARY KEY (`drink_id`, `allergy`)
 )ENGINE=INNODB CHARSET=utf8mb4 COMMENT='음료 알레르기 테이블';
 
 
 CREATE TABLE drink_tag(
     `drink_id`          INTEGER         NOT NULL    COMMENT '음료ID',
     `tag`               VARCHAR(50)     NOT NULL    COMMENT '태그',
-    PRIMARY KEY (`drink_id`)
+    PRIMARY KEY (`drink_id`, `tag`)
 )ENGINE=INNODB CHARSET=utf8mb4 COMMENT='음료 태그 테이블';
 
 
 CREATE TABLE drink_comment(
-    `drink_id`          INTEGER         NOT NULL    COMMENT '음료ID',
     `comment_id`        INTEGER         NOT NULL    AUTO_INCREMENT  COMMENT '댓글ID',
+    `drink_id`          INTEGER         NOT NULL    COMMENT '음료ID',
     `customer_uuid`     VARCHAR(40)     NOT NULL    COMMENT '유저고유ID',
     `comment`           VARCHAR(255)    NOT NULL    COMMENT '댓글',
     `score`             FLOAT(3,1)                  COMMENT '별점',
-    PRIMARY KEY (`drink_id`, `comment_id`, `customer_uuid`)
+    PRIMARY KEY (`comment_id`)
 )ENGINE=INNODB CHARSET=utf8mb4 COMMENT='음료 댓글 테이블';
 
 

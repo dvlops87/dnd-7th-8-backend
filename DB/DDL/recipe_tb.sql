@@ -43,17 +43,17 @@ CREATE TABLE recipe_meterial(
 CREATE TABLE recipe_tag(
     `recipe_id`         INTEGER         NOT NULL    COMMENT '레시피ID',
     `tag`               VARCHAR(50)     NOT NULL    COMMENT '태그',
-    PRIMARY KEY (`recipe_id`)
+    PRIMARY KEY (`recipe_id`, `tag`)
 )ENGINE=INNODB CHARSET=utf8mb4 COMMENT='레시피 태그 테이블';
 
 
 CREATE TABLE recipe_comment(
-    `recipe_id`         INTEGER         NOT NULL    COMMENT '레시피ID',
     `comment_id`        INTEGER         NOT NULL    AUTO_INCREMENT    COMMENT '댓글ID',
+    `recipe_id`         INTEGER         NOT NULL    COMMENT '레시피ID',
     `customer_uuid`     VARCHAR(40)     NOT NULL    COMMENT '유저고유ID',
     `comment`           VARCHAR(255)    NOT NULL    COMMENT '댓글',
     `score`             FLOAT(3,1)                  COMMENT '별점',
-    PRIMARY KEY (`recipe_id`, `comment_id`, `customer_uuid`)
+    PRIMARY KEY (`comment_id`)
 )ENGINE=INNODB CHARSET=utf8mb4 COMMENT='레시피 댓글 테이블';
 
 
