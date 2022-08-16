@@ -41,7 +41,7 @@ def call_sp_recipe_set(sp_args, cursor=None):
                 'summary': `str`,
                 'description': `str`,
                 'img': `blob`,
-                'price's,
+                'price': `int`,
                 'mesaure_standard': `str`,
                 'tip': `str',
                 'diff_score': `float`,
@@ -142,7 +142,7 @@ def call_sp_recipe_review_select(sp_args, cursor=None):
 
 
 @db_conn
-def call_sp_recipe_review_st(sp_args, cursor=None):
+def call_sp_recipe_review_set(sp_args, cursor=None):
     """CALL recipe Review Insert SP Fucntion
     Args:
         sp_args (dict): sp argumentes following keys::
