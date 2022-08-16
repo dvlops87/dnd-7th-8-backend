@@ -8,6 +8,7 @@ charset-normalizer==2.1.0
 cryptography==37.0.4
 defusedxml==0.7.1
 Django==4.0.6
+django-allauth==0.51.0
 django-rest-auth==0.9.5
 djangorestframework==3.13.1
 djangorestframework-jwt==1.11.0
