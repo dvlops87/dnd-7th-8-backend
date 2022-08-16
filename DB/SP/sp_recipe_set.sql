@@ -1,7 +1,6 @@
 CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_sect` (
      IN `i_customer_uuid`     VARCHAR(40)      -- 유저ID
     ,IN `i_recipe_name`       VARCHAR(255)     -- 레시피명
-    ,IN `i_customer_uuid`     VARCHAR(40)
     ,IN `i_summary`           VARCHAR(255)
     ,IN `i_description`       TEXT
     ,IN `i_img`               LONGBLOB
@@ -43,7 +42,6 @@ LAST UPDATE : 2022-08-16
     INSERT INTO recipe(
      `customer_uuid`
     ,`recipe_name`
-    ,`customer_uuid`
     ,`summary`    
     ,`description`
     ,`img`
@@ -57,7 +55,6 @@ LAST UPDATE : 2022-08-16
     ) VALUES (
      `i_customer_uuid`
     ,`i_recipe_name`
-    ,`i_customer_uuid`
     ,`i_summary`    
     ,`i_description`
     ,`i_img`
