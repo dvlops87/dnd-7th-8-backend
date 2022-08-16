@@ -7,9 +7,9 @@ RUN mkdir /code
 WORKDIR /code
 
 # 코드 실행될 경로에 requirments.txt 복사 후 설치
-ADD requirements.txt /code/
+COPY ./requirements.txt /code/requirements.txt
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r /code/requirements.txt
 
 # 프로젝트를 code로 복사
-ADD . /code/
+COPY . .
