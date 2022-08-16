@@ -27,7 +27,7 @@ LAST UPDATE : 2022-08-07
     SELECT MU.`nickname`
          , RC.`commnet`
          , RC.`score`
-         , (SELECT COUNT(*) FROM recipe_comment_like WHERE R.recipe_id = i_recipe_id) as `like_cnt`
+         , (SELECT COUNT(*) FROM recipe_comment_like WHERE recipe_id = i_recipe_id) as `like_cnt`
     FROM recipe_comment AS RC
     LEFT JOIN (
         SELECT customer_uuid
