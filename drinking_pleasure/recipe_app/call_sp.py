@@ -127,7 +127,7 @@ def call_sp_recipe_review_select(sp_args, cursor=None):
                 '':
             }
     """
-    sp = "CALL sp_recipe_select(%(recipe_id)s, %(offset)s, %(limit)s @o);"
+    sp = "CALL sp_recipe_review_select(%(recipe_id)s, %(offset)s, %(limit)s @o);"
     cursor.execute(sp, sp_args)
     data = cursor.fetchall()
 
@@ -155,7 +155,7 @@ def call_sp_recipe_review_set(sp_args, cursor=None):
     Returns:
         res (bool): `True` if out_code==0 else `False`
     """
-    sp = "CALL sp_recipe_select(%(recipe_id)s, %(customer_uuid)s,\
+    sp = "CALL sp_recipe_review_set(%(recipe_id)s, %(customer_uuid)s,\
          %(comment)s, %(score)s, @o);"
     cursor.execute(sp, sp_args)
 
