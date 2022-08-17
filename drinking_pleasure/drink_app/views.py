@@ -26,6 +26,7 @@ class DrinkGetList(APIView):
         curs.execute(sql_delete)
         rows = curs.fetchall()
         curs.close()
+        con.close()
         data_list = []
         for row in rows:
             data = dict()
@@ -65,6 +66,7 @@ class DrinkDetail(APIView):
         curs.execute(sql_get,(pk,payload['id']))
         rows = curs.fetchall()
         curs.close()
+        con.close()
         data = {
             "drink_name" : rows[0]['drink_name'],
             "description" : rows[0]['description'],
@@ -109,6 +111,7 @@ class DrinkDetail(APIView):
         curs.execute(sql_insert,(drink_name,description,calorie,manufacture,price,large_category,medium_category,small_category,img,alcohol,measure,caffeine))
         curs.close()
         con.commit()
+        con.close()
         return Response({"message": "success create comment"}, status=status.HTTP_201_CREATED)
 
 
@@ -123,6 +126,7 @@ class DrinkReview(APIView):
         curs.execute(sql,(pk,))
         rows = curs.fetchall()
         curs.close()
+        con.close()
         data_list = []
         if len(rows) == 0:
             return Response({"message" : "No data in comment"}, status=status.HTTP_404_NOT_FOUND)
@@ -142,16 +146,21 @@ class DrinkReview(APIView):
         score = request.GET['score']
         token = request.COOKIES.get('token')
         if not token :
+            curs.close()
+            con.close()
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
             payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
-        except jwt.ExpiredSignatureError:   
+        except jwt.ExpiredSignatureError:  
+            curs.close()
+            con.close() 
             raise AuthenticationFailed('UnAuthenticated!')
         # SQL문 사용
         sql_insert = "insert into drink_comment (drink_id, customer_uuid, comment, score) values (%s,%s,%s,%s)"
         curs.execute(sql_insert,(pk,payload['id'],comment,score))
         curs.close()
         con.commit()
+        con.close()
         return Response({"message": "success create comment"}, status=status.HTTP_201_CREATED)
         
     def delete(self,request, pk):
@@ -159,15 +168,20 @@ class DrinkReview(APIView):
         curs = con.cursor(dictionary=True)
         token = request.COOKIES.get('token')
         if not token :
+            curs.close()
+            con.close()
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
             payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
         except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
             raise AuthenticationFailed('UnAuthenticated!')
         sql_delete = "delete from drink_comment where drink_id=%s and customer_uuid=%s"
         curs.execute(sql_delete,(pk,payload['id']))
         curs.close()
         con.commit()
+        con.close()
         return Response({"message": "success delete comment"}, status=status.HTTP_201_CREATED)
         
 
@@ -181,10 +195,14 @@ class DrinkLike(APIView):
         curs = con.cursor(dictionary=True)
         token = request.COOKIES.get('token')
         if not token :
+            curs.close()
+            con.close()
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
             payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
         except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
             raise AuthenticationFailed('UnAuthenticated!')
         sql_exist = "select * from drink_like where where drink_id=%s and customer_uuid=%s"
         curs.execute(sql_exist,(pk,payload['id'],))
@@ -194,12 +212,14 @@ class DrinkLike(APIView):
             curs.execute(sql_insert,(pk,payload['id']))
             curs.close()
             con.commit()
+            con.close()
             return Response({"message": "success create like"}, status=status.HTTP_201_CREATED)
         else:
             sql_delete = "delete from drink_like where drink_id=%s and customer_uuid=%s"
             curs.execute(sql_delete,(pk,payload['id']))
             curs.close()
             con.commit()
+            con.close()
             return Response({"message": "success delete like"}, status=status.HTTP_200_OK)
 
 
@@ -211,10 +231,14 @@ class DrinkCommentLike(APIView):
         curs = con.cursor(dictionary=True)
         token = request.COOKIES.get('token')
         if not token :
+            curs.close()
+            con.close()
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
             payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
         except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
             raise AuthenticationFailed('UnAuthenticated!')
         sql_exist = "select * from drink_comment_like where comment_id=%s and customer_uuid=%s"
         curs.execute(sql_exist,(pk,payload['id'],))
@@ -224,10 +248,12 @@ class DrinkCommentLike(APIView):
             curs.execute(sql_insert,(pk,payload['id']))
             curs.close()
             con.commit()
+            con.close()
             return Response({"message": "success create comment like"}, status=status.HTTP_201_CREATED)
         else:
             sql_delete = "delete from drink_comment_like where comment_id=%s and customer_uuid=%s"
             curs.execute(sql_delete,(pk,payload['id']))
             curs.close()
             con.commit()
+            con.close()
             return Response({"message": "success delete comment like"}, status=status.HTTP_200_OK)
