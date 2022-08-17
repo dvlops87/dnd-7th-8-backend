@@ -8,4 +8,5 @@ urlpatterns = [
     path('get/<int:pk>',views.DrinkDetail.as_view()),
     path('review/<int:pk>',views.DrinkReview.as_view()),
     path('like/<int:pk>',views.DrinkLike.as_view()),
+    path('like/comment/<int:pk>',views.DrinkCommentLike.as_view()),
 ]

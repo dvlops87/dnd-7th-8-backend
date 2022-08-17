@@ -1,5 +1,5 @@
 import pymysql
-from DBUtils.PooledDB import PooledDB
+from dbutils.pooled_db import PooledDB
 from drinking_pleasure.my_settings import MY_DBCONFIG, DATABASE
 
 
