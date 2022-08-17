@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-import call_sp
+from recipe_app import call_sp
 
 
 class RecipeDetailView(APIView):
