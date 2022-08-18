@@ -39,7 +39,10 @@ class RecipeDetailView(APIView):
             user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
             customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        try:
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
             description = request.POST.get('description')
@@ -89,7 +92,7 @@ class RecipeDetailView(APIView):
 
             customer_uuid = user['id']
         except Exception:
-            customer_uuid = None
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         sp_args = {
             'customer_uuid': customer_uuid,
@@ -129,7 +132,10 @@ class RecipeReviewView(APIView):
             user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
             customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        try:
             comment = request.POST.get('comment')
             score = request.POST.get('score')
         except KeyError:
