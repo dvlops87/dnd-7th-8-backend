@@ -1,4 +1,5 @@
 import jwt
+import base64
 from django.conf import settings
 from rest_framework import status
 from rest_framework import permissions
@@ -67,7 +68,7 @@ class RecipeDetailView(APIView):
             'recipe_name': recipe_name,
             'summary': summary,
             'description': description,
-            'img': img,
+            'img':  base64.decodebytes(img).decode('latin_1'),
             'price': price,
             'mesaure_standard': mesaure_standard,
             'tip': tip,
