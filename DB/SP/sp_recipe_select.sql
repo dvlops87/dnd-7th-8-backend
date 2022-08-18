@@ -8,8 +8,8 @@ BEGIN
 /* ----------------------------------------------------------------------------
 sp_recipe_select : 레시피 상세 메뉴 조회
 author : dylee
-RELEASE : 0.0.1
-LAST UPDATE : 2022-08-07
+RELEASE : 0.0.2         main_material의 measuer 컬럼 삭제로, 서브쿼리로 한 번에 구현하도록 변경
+LAST UPDATE : 2022-08-16
 ---------------------------------------------------------------------------- */ 
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
@@ -37,35 +37,12 @@ LAST UPDATE : 2022-08-07
          , R.`price_score`
          , R.`sweet_score`
          , R.`alcohol_score`
-         , (SELECT COUNT(*) FROM recipe_like WHERE R.recipe_id = i_recipe_id) as `like_cnt`
+         , (SELECT GROUP_CONCAT(drink_name) FROM recipe_main_meterial WHERE recipe_id=i_recipe_id) as `main_meterial`
+         , (SELECT GROUP_CONCAT(meterial_name) FROM recipe_sub_meterial WHERE recipe_id=i_recipe_id) as `sub_meterial`
+         , (SELECT COUNT(*) FROM recipe_like WHERE recipe_id = i_recipe_id) as `like_cnt`
     FROM recipe AS R
     LEFT JOIN recipe_tag AS RT
         ON RT.recipe_id=R.recipe_id
     WHERE R.recipe_id = i_recipe_id;
-
-    /* 220807 recipe 메인 재료 조회의 mesure(양)이 레시피 상세 조회 시 필요할 것 같아, 재료 조회, 부재료 조회 SQL을 분리했습니다
-    -> 메인 재료에 대한 계량이 필요 없다면 합치겠습니다*/
-
-    -- 3. recipe 메인 재료 조회
-    SELECT D.`drink_name`
-         , RM.`mesure`
-    FROM recipe_main_meterial AS RM
-    LEFT JOIN (
-        SELECT drink_id
-             , drink_name
-        FROM drink
-    ) D ON R.drink_id = RM.drink_id
-    WHERE RM.recipe_id = i_recipe_id;
-
-    -- 4. recipe 부재료 조회
-    SELECT M.`meterial_name`
-    FROM recipe_sub_meterial AS SM
-    LEFT JOIN (
-        SELECT meterial_id
-             , meterial_name
-        FROM recipe_meterial
-    ) M ON R.drink_id = RM.drink_id
-    WHERE SM.recipe_id = i_recipe_id;
-
 
 END
