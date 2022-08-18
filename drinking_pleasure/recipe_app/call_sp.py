@@ -16,7 +16,7 @@ def call_sp_recipe_select(sp_args, cursor=None):
                 '':
             }
     """
-    sp = "CALL sp_recipe_select(%(customer_uuid)s, %(recipe_id)s, @o);"
+    sp = "CALL sp_recipe_select(%(recipe_id)s, %(customer_uuid)s, @o);"
     cursor.execute(sp, sp_args)
     data = cursor.fetchall()
 
@@ -127,7 +127,7 @@ def call_sp_recipe_review_select(sp_args, cursor=None):
                 '':
             }
     """
-    sp = "CALL sp_recipe_review_select(%(recipe_id)s, %(offset)s, %(limit)s @o);"
+    sp = "CALL sp_recipe_review_select(%(recipe_id)s, %(offset)s, %(limit)s, @o);"
     cursor.execute(sp, sp_args)
     data = cursor.fetchall()
 
