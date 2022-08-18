@@ -1,9 +1,8 @@
-CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_select` (
+CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_select`(
      IN i_recipe_id     VARCHAR(40)     -- 레시피ID
     ,IN i_customer_uuid VARCHAR(40)     -- 유저ID
     ,OUT `o_out_code`   SMALLINT
 )
-
 BEGIN
 /* ----------------------------------------------------------------------------
 sp_recipe_select : 레시피 상세 메뉴 조회
@@ -31,14 +30,14 @@ LAST UPDATE : 2022-08-16
          , R.`description`
          , R.`img`
          , R.`price`
-         , R.`mesure_standard`
+         , R.`measure_standard`
          , R.`tip`
          , R.`diff_score`
          , R.`price_score`
          , R.`sweet_score`
          , R.`alcohol_score`
-         , (SELECT GROUP_CONCAT(drink_name) FROM recipe_main_meterial WHERE recipe_id=i_recipe_id) as `main_meterial`
-         , (SELECT GROUP_CONCAT(meterial_name) FROM recipe_sub_meterial WHERE recipe_id=i_recipe_id) as `sub_meterial`
+         , (SELECT GROUP_CONCAT(drink_id) FROM recipe_main_meterial WHERE recipe_id=i_recipe_id) as `main_meterial`
+         , (SELECT GROUP_CONCAT(meterial_id) FROM recipe_sub_meterial WHERE recipe_id=i_recipe_id) as `sub_meterial`
          , (SELECT COUNT(*) FROM recipe_like WHERE recipe_id = i_recipe_id) as `like_cnt`
     FROM recipe AS R
     LEFT JOIN recipe_tag AS RT
