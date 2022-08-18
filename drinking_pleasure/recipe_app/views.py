@@ -1,9 +1,14 @@
+import jwt
+from django.conf import settings
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from recipe_app import call_sp
+import recipe_app.call_sp as call_sp
+
+
+JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
 
 
 class RecipeDetailView(APIView):
@@ -11,9 +16,10 @@ class RecipeDetailView(APIView):
 
     def get(self, request, pk):
         try:
-            user = request.user
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
-            customer_uuid = user.customer_uuid
+            customer_uuid = user['id']
         except Exception:
             customer_uuid = None
 
@@ -29,8 +35,14 @@ class RecipeDetailView(APIView):
 
     def post(self, request):
         try:
-            customer_uuid = request.user.customer_uuid
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
+            customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
             description = request.POST.get('description')
@@ -43,7 +55,7 @@ class RecipeDetailView(APIView):
             sweet_score = request.POST.get('sweet_score')
             alcohol_score = request.POST.get('alcohol_score')
             main_meterial = request.POST.get('main_meterial')
-            sub_meterial = request.POST.get('pricsub_meteriale_score')
+            sub_meterial = request.POST.get('sub_meterial')
 
             main_meterial_list = main_meterial.split(',')
             sub_meterial_list = sub_meterial.split(',')
@@ -75,11 +87,12 @@ class RecipeDetailView(APIView):
 
     def delete(self, request, pk):
         try:
-            user = request.user
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
-            customer_uuid = user.customer_uuid
+            customer_uuid = user['id']
         except Exception:
-            customer_uuid = None
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         sp_args = {
             'customer_uuid': customer_uuid,
@@ -115,8 +128,14 @@ class RecipeReviewView(APIView):
 
     def post(self, request, pk):
         try:
-            customer_uuid = request.user.customer_uuid
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
 
+            customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
             comment = request.POST.get('comment')
             score = request.POST.get('score')
         except KeyError:
