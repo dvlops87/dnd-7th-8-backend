@@ -5,6 +5,9 @@ cp /home/ubuntu/my_settings.py /usr/share/Mazle/drinking_pleasure/drinking_pleas
 
 cd /usr/share/Mazle/drinking_pleasure
 
+# python 버전 변경
+pyenv global 3.8.5
+
 # 가상환경설정
 python3 -m venv .venv
 source /usr/share/Mazle/drinking_pleasure/.venv/bin/activate
