@@ -35,3 +35,4 @@ style==1.1.0
 tzdata==2022.1
 update==0.0.1
 urllib3==1.26.11
+uWSGI==2.0.20
