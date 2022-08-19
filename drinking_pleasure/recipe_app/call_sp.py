@@ -18,16 +18,20 @@ def call_sp_recipe_select(sp_args, cursor=None):
     """
     sp = "CALL sp_recipe_select(%(recipe_id)s, %(customer_uuid)s, @o);"
     cursor.execute(sp, sp_args)
-    data = cursor.fetchall()
-
-    cursor.execute('SELECT @o')
-    out_code = cursor.fetchone()
-    out_code = out_code['@o']
-
-    if out_code == -99:
+    data = cursor.fetchone()
+    if not data:
         return {}
-    else:
-        return data
+
+    cursor.nextset()
+    drink_data = cursor.fetchall()
+
+    cursor.nextset()
+    meterial_data = cursor.fetchall()
+
+    data['main_meterial_list'] = drink_data
+    data['sub_meterial_list'] = meterial_data
+
+    return data
 
 
 @db_conn
