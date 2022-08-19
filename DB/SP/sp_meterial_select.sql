@@ -34,7 +34,7 @@ LAST UPDATE : 2022-08-20
       SET @v_sql = CONCAT("
         SELECT meterial_name
         FROM recipe_meterial
-        WHERE meterial_name LIKE '%",i_meterial_name,"';");
+        WHERE meterial_name LIKE '",i_meterial_name,"%';");
 
       PREPARE stmt FROM @v_sql;
       EXECUTE stmt;
