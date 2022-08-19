@@ -170,6 +170,33 @@ def call_sp_recipe_review_set(sp_args, cursor=None):
 
 
 @db_conn
+def call_sp_recipe_like_select(sp_args, cursor=None):
+    """CALL recipe Like Insert SP Fucntion
+    Args:
+        sp_args (dict): sp argumentes following keys::
+            dict: {
+                'customer_uuid': `(str)`,
+                'recipe_id': `(int)` recipe_id,
+            }
+    Returns:
+        res (bool): `True` if out_code==0 else `False`
+    """
+    sp = "CALL sp_recipe_like_select(%(customer_uuid)s, %(recipe_id)s, @o);"
+    cursor.execute(sp, sp_args)
+    data = cursor.fetchone()
+    print(data)
+
+    cursor.execute('SELECT @o')
+    out_code = cursor.fetchone()
+    out_code = out_code['@o']
+
+    if out_code == -99:
+        return None
+    else:
+        return data
+
+
+@db_conn
 def call_sp_recipe_like_set(sp_args, cursor=None):
     """CALL recipe Like Insert SP Fucntion
     Args:
