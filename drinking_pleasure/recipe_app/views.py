@@ -175,7 +175,6 @@ class RecipeLikeView(APIView):
             'recipe_id': recipe_id,
         }
         is_suc, data = call_sp.call_sp_recipe_like_select(sp_args)
-        print(data)
 
         if is_suc:
             return Response(status=status.HTTP_200_OK, data=data)
@@ -215,7 +214,7 @@ class RecipeLikeView(APIView):
             'customer_uuid': customer_uuid,
             'recipe_id': recipe_id,
         }
-        is_suc, _ = call_sp.call_sp_recipe_like_set(sp_args)
+        is_suc, _ = call_sp.call_sp_recipe_like_delete(sp_args)
 
         if is_suc:
             return Response(status=status.HTTP_200_OK)
