@@ -28,7 +28,7 @@ LAST UPDATE : 2022-08-18
     START TRANSACTION;
 
     -- 1. 데이터 인서트
-    INSERT INTO recipe(
+    INSERT INTO recipe_like(
      `customer_uuid`
     ,`recipe_id`
     ) VALUES (

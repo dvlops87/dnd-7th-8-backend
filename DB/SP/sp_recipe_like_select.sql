@@ -30,7 +30,7 @@ LAST UPDATE : 2022-08-07
         SELECT recipe_id
         FROM recipe_like
         WHERE customer_uuid=i_customer_uuid
-          AND recipe=i_recipe_id;
+          AND recipe_id=i_recipe_id;
 
     ELSE
         -- 2. 유저 전제 레시피 좋아요 여부
