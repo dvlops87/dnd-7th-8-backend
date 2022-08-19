@@ -158,7 +158,10 @@ class RecipeReviewView(APIView):
 class RecipeLikeView(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request):
+    def get(self, request, recipe_id):
+        '''
+        유저가 해당 recipe_id에 좋아요 했는지 여부
+        '''
         try:
             token = request.COOKIES.get('token')
             user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
@@ -167,10 +170,26 @@ class RecipeLikeView(APIView):
         except Exception:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        sp_args = {
+            'customer_uuid': customer_uuid,
+            'recipe_id': recipe_id,
+        }
+        is_suc, data = call_sp.call_sp_recipe_like_select(sp_args)
+        print(data)
+
+        if is_suc:
+            return Response(status=status.HTTP_200_OK, data=data)
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request, recipe_id):
         try:
-            recipe_id = request.POST.get('recipe_id')
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+
+            customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         sp_args = {
             'customer_uuid': customer_uuid,
@@ -183,11 +202,7 @@ class RecipeLikeView(APIView):
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def get(self, request):
-        '''
-        유저가 좋아요 한 recipe_id 리스트
-        recipe_id 파라미터가 존재하면, 해당 recipe_id 에 대한 좋아요 여부만 리턴
-        '''
+    def delete(self, request, recipe_id):
         try:
             token = request.COOKIES.get('token')
             user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
@@ -195,11 +210,6 @@ class RecipeLikeView(APIView):
             customer_uuid = user['id']
         except Exception:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            recipe_id = request.GET.get('recipe_id')
-        except KeyError:
-            recipe_id = None
 
         sp_args = {
             'customer_uuid': customer_uuid,
