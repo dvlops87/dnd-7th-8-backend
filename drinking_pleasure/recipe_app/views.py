@@ -249,3 +249,47 @@ class RecipeLikeView(APIView):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class MeterialView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        try:
+            meterial_name = request.GET.get('meterial_name', None)
+        except KeyError:
+            meterial_name = None
+
+        sp_args = {
+            'meterial_name': meterial_name,
+        }
+        is_suc, data = call_sp.call_sp_meterial_select(sp_args)
+        if is_suc:
+            return Response(status=status.HTTP_200_OK, data=data)
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)      
+
+    def post(self, request):
+        try:
+            token = request.COOKIES.get('token')
+            user = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+
+            customer_uuid = user['id']
+        except Exception:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            meterial_name = request.POST['meterial_name']
+            img = request.POST.get('img')
+        except KeyError:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        sp_args = {
+            'meterial_name': meterial_name,
+            'img': img,
+        }
+        is_suc, data = call_sp.call_sp_meterial_set(sp_args)
+        if is_suc:
+            return Response(status=status.HTTP_200_OK, data=data)
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
