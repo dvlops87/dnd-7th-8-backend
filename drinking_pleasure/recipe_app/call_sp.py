@@ -2,6 +2,25 @@ from util.db_conn import db_conn
 
 
 @db_conn
+def call_sp_recipe_list_select(sp_args, cursor=None):
+    """ 
+    임시. ES 구축 후 삭제 예정
+    """
+    sp = "CALL sp_recipe_list_select(%(offset)s, %(limit)s, %(search_keyword)s, %(order)s, @o);"
+    cursor.execute(sp, sp_args)
+    data = cursor.fetchall()
+
+    cursor.execute('SELECT @o')
+    out_code = cursor.fetchone()
+    out_code = out_code['@o']
+
+    if out_code == -99:
+        return []
+    else:
+        return data
+
+
+@db_conn
 def call_sp_recipe_select(sp_args, cursor=None):
     """CALL recipe detail select SP Fucntion
     Args:
