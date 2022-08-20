@@ -1,16 +1,15 @@
 from codecs import utf_16_be_decode, utf_16_be_encode
 import tempfile
-from tokenize import Token
 from django.http import JsonResponse
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 from argon2 import PasswordHasher
 import base64
 import pymysql
@@ -19,7 +18,6 @@ from datetime import datetime,timedelta
 from .password_validcheck import password_validcheck
 import uuid
 from mysql.connector import pooling
-from django.contrib.auth.decorators import login_required
 
 dbconfig = getattr(settings, 'DBCONFIG', None)
 JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
@@ -145,7 +143,16 @@ def update(request) :
         con = pool.get_connection()
         curs = con.cursor()
         token = request.COOKIES.get('token')
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        if not token :
+            curs.close()
+            con.close()
+            return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
+            raise AuthenticationFailed('UnAuthenticated!')
         nickname = request.POST.get("nickname")
         birth = request.POST.get("birth")
         profile = base64.encodebytes(request.FILES["profile"].read())
@@ -167,7 +174,16 @@ def update_password(request) :
         curs = con.cursor()
         passwd = request.POST.get("passwd")
         token = request.COOKIES.get("token")
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        if not token :
+            curs.close()
+            con.close()
+            return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
+            raise AuthenticationFailed('UnAuthenticated!')
         # SQL문 사용
         sql_update = "update mazle_user set passwd=%s where customer_uuid=%s"
         curs.execute(sql_update,(PasswordHasher().hash(passwd),payload['id']))
@@ -177,16 +193,24 @@ def update_password(request) :
 
         return Response({"message": "Update user"}, status=status.HTTP_200_OK)
 
-
-@api_view(['GET'])
+        
 @authentication_classes([])
 @permission_classes([]) 
-def mypage(request) :
-    if request.method == 'GET' :
+class MyPageProfile(APIView):
+    def get(self,request):
         con = pool.get_connection()
         curs = con.cursor()
         token = request.COOKIES.get("token")
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        if not token :
+            curs.close()
+            con.close()
+            return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
+            raise AuthenticationFailed('UnAuthenticated!')
         sql_update = "select nickname, birth, profile, email, platform from mazle_user where customer_uuid=%s"
         curs.execute(sql_update,(payload['id'],))
         rows = curs.fetchall()
@@ -205,3 +229,97 @@ def mypage(request) :
         # f.write(oo.encode('latin_1'))
         # f.close()
         return JsonResponse({'data' : data})
+
+        
+@authentication_classes([])
+@permission_classes([]) 
+class MyPageReview(APIView):
+    def get(self,request):
+        con = pool.get_connection()
+        curs = con.cursor(dictionary=True)
+        token = request.COOKIES.get("token")
+        if not token :
+            curs.close()
+            con.close()
+            return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
+            raise AuthenticationFailed('UnAuthenticated!')
+        sql_drink = "select * from drink_comment where customer_uuid=%s"
+        curs.execute(sql_drink,(payload['id'],))
+        rows_drink = curs.fetchall()
+        sql_recipe = "select * from recipe_comment where customer_uuid=%s"
+        curs.execute(sql_recipe,(payload['id'],))
+        rows_recipe = curs.fetchall()
+        curs.close()
+        con.close()
+        data_recipe_list = []
+        data_drink_list = []
+        if len(rows_drink) != 0:
+            for row in rows_drink:
+                data_drink = {}
+                data_drink["comment_id"] = row["comment_id"]
+                data_drink["drink_id"] = row["drink_id"]
+                data_drink["comment"] = row["comment"]
+                data_drink["score"] = row["score"]
+                data_drink_list.append(data_drink)
+        else:
+            data_drink_list.append("Not Exist Drink Comment")
+        if len(rows_recipe) != 0:
+            for row in rows_recipe:
+                data_recipe = {}
+                data_recipe["comment_id"] = row["comment_id"]
+                data_recipe["recipe_id"] = row["recipe_id"]
+                data_recipe["comment"] = row["comment"]
+                data_recipe["score"] = row["score"]
+                data_recipe_list.append(data_recipe)
+        else:
+            data_recipe_list.append("Not Exist Recipe Comment")
+        return JsonResponse({'drink_comment' : data_drink_list, 'recipe_comment':data_recipe_list})
+
+        
+@authentication_classes([])
+@permission_classes([]) 
+class MyPageRecipe(APIView):
+    def get(self,request):
+        con = pool.get_connection()
+        curs = con.cursor(dictionary=True)
+        token = request.COOKIES.get("token")
+        if not token :
+            curs.close()
+            con.close()
+            return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:   
+            curs.close()
+            con.close()
+            raise AuthenticationFailed('UnAuthenticated!')
+        sql_update = "select * from recipe where customer_uuid=%s"
+        curs.execute(sql_update,(payload['id'],))
+        rows = curs.fetchall()
+        curs.close()
+        con.close()
+        if len(rows) == 0:
+            return Response({"message": "Not Exist Recipe"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            data_list = []
+            for row in rows:
+                data = {}
+                data["recipe_id"] = row["recipe_id"]
+                data["recipe_name"] = row["recipe_name"]
+                data["summary"] = row["summary"]
+                data["description"] = row["description"]
+                data["img"] = base64.decodebytes(row["img"]).decode('latin_1')
+                data["price"] = row["price"]
+                data["measure_standard"] = row["measure_standard"]
+                data["tip"] = row["tip"]
+                data["diff_score"] = row["diff_score"]
+                data["price_score"] = row["price_score"]
+                data["sweet_score"] = row["sweet_score"]
+                data["alcohol_score"] = row["alcohol_score"]
+                data_list.append(data)
+            return JsonResponse({'data' : data_list})
