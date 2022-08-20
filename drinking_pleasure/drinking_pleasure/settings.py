@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth',
 
-    'user_app'
+    'user_app',
+    'recipe_app',
 ]
 
 MIDDLEWARE = [

@@ -10,6 +10,8 @@ urlpatterns = [
     path('wdrl/', views.wdrl),
     path('update/', views.update),
     path('update/password/', views.update_password),
-    path('info/', views.mypage),
+    path('mypage/profile/', views.MyPageProfile.as_view()),
+    path('mypage/review/', views.MyPageReview.as_view()),
+    path('mypage/recipe/', views.MyPageRecipe.as_view()),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
