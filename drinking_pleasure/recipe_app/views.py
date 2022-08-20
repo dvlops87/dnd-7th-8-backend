@@ -1,11 +1,11 @@
 import jwt
-import base64
 from django.conf import settings
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+import recipe_app.util as util
 import recipe_app.call_sp as call_sp
 
 
@@ -35,6 +35,7 @@ class RecipeView(APIView):
         }
         is_suc, data = call_sp.call_sp_recipe_list_select(sp_args)
         if is_suc:
+            data = util.preprocessing_list_data(data)
             return Response(status=status.HTTP_200_OK, data=data)
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
@@ -58,6 +59,7 @@ class RecipeDetailView(APIView):
         }
         is_suc, data = call_sp.call_sp_recipe_select(sp_args)
         if is_suc:
+            data = util.preprocessing_recipe_data(data)
             return Response(status=status.HTTP_200_OK, data=data)
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -75,7 +77,7 @@ class RecipeDetailView(APIView):
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
             description = request.POST.get('description')
-            img = request.POST.get('img')
+            img = request.File.get('img')
             price = request.POST.get('price')
             mesaure_standard = request.POST.get('mesaure_standard')
             tip = request.POST.get('tip')
@@ -96,7 +98,7 @@ class RecipeDetailView(APIView):
             'recipe_name': recipe_name,
             'summary': summary,
             'description': description,
-            'img':  base64.decodebytes(img).decode('latin_1'),
+            'img': img,
             'price': price,
             'mesaure_standard': mesaure_standard,
             'tip': tip,
@@ -265,6 +267,7 @@ class MeterialView(APIView):
         }
         is_suc, data = call_sp.call_sp_meterial_select(sp_args)
         if is_suc:
+            data = util.preprocessing_list_data(data)
             return Response(status=status.HTTP_200_OK, data=data)
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)      
@@ -286,7 +289,7 @@ class MeterialView(APIView):
 
         sp_args = {
             'meterial_name': meterial_name,
-            'img': img,
+            'img':img,
         }
         is_suc, data = call_sp.call_sp_meterial_set(sp_args)
         if is_suc:
