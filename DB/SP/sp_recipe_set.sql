@@ -1,4 +1,4 @@
-CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_sect` (
+CREATE DEFINER=`dylee`@`%` PROCEDURE `sp_recipe_set` (
      IN `i_customer_uuid`     VARCHAR(40)      -- 유저ID
     ,IN `i_recipe_name`       VARCHAR(255)     -- 레시피명
     ,IN `i_summary`           VARCHAR(255)
