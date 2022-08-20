@@ -57,24 +57,6 @@ PUT recipe
             "main_meterial": {
                 "type": "nested",
                 "properties": {
-                    "meterial_id": {
-                        "type": "integer"
-                    },
-                    "meterial_name": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        },
-                        "analyzer": "my_analyzer"
-                    }
-                }
-            },
-            "sub_meterial": {
-                "type": "nested",
-                "properties": {
                     "drink_id": {
                         "type": "integer"
                     },
@@ -101,7 +83,24 @@ PUT recipe
                         "type": "integer"
                     }
                 }
-
+            },
+            "sub_meterial": {
+                "type": "nested",
+                "properties": {
+                    "meterial_id": {
+                        "type": "integer"
+                    },
+                    "meterial_name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        },
+                        "analyzer": "my_analyzer"
+                    }
+                }
             },
             "tag_list": {
                 "type": "nested",
