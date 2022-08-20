@@ -77,7 +77,7 @@ class RecipeDetailView(APIView):
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
             description = request.POST.get('description')
-            img = request.File.get('img')
+            img = request.POST.get('img')
             price = request.POST.get('price')
             mesaure_standard = request.POST.get('mesaure_standard')
             tip = request.POST.get('tip')
