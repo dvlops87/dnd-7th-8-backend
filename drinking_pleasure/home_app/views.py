@@ -66,6 +66,7 @@ class HotReview(APIView):
             from drink_comment \
             left join drink_comment_like on drink_comment.comment_id = drink_comment_like.comment_id \
             group by drink_comment_like.comment_id \
+            order by like_cnt desc \
             limit 10;"
         rows = sql_cursor(sql_select)[1]
         data_list = []
