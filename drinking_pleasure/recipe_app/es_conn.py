@@ -180,11 +180,14 @@ class MakeESQuery:
     def set_sort(self, query):
         if self.sort_by:
             query["sort"] = [
-                { self.sort_by: {"order": "desc"}}
+                {self.sort_by: {"order": "desc"}},
+                {'reg_dtime': {"order": "desc"}},
+                {'@timestamp': {"order": "desc"}},
             ]
         else:
             query["sort"] = [
-
+                {'reg_dtime': {"order": "desc"}},
+                {'@timestamp': {"order": "desc", "format": "strict_date_optional_time_nanos"}},
             ]
         return query
 

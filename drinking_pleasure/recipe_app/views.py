@@ -13,37 +13,18 @@ from recipe_app.es_conn import MakeESQuery
 JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
 
 
-class RecipeView(APIView):
+class RecipeUsingSQLView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
         try:
             offset = request.GET.get('offset', 0)
             limit = request.GET.get('limit', 10)
-
             search_keyword = request.GET.get('search_keyword', None)
-            recipe_name = request.GET.get('recipe_name', None)
-            price = request.GET.get('price', None)  # [0, 5000]
-            tag = request.GET.get('tag', None)  # list
-            large_category = request.GET.get('large_category', None)
-            medium_category = request.GET.get('medium_category', None)
-            small_category = request.GET.get('small_category', None)
-
             is_order = request.GET.get('is_order', None)
-
         except KeyError:
             offset = 0
             limit = 10
-
-        es = MakeESQuery(
-            search_query=search_keyword,
-            recipe_name=recipe_name,
-            price=price,
-            tag=tag,
-            large_category=large_category,
-            medium_category=medium_category,
-            small_category=small_category
-        )
 
         sp_args = {
             'offset': offset,
@@ -56,6 +37,59 @@ class RecipeView(APIView):
             data = util.preprocessing_list_data(data)
             return Response(status=status.HTTP_200_OK, data=data)
         else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RecipeView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        try:
+            offset = request.GET.get('offset', 0)
+            limit = request.GET.get('limit', 10)
+            sort_by = request.GET.get('sort_by', None)
+
+            search_keyword = request.GET.get('search_keyword', None)
+            recipe_name = request.GET.get('recipe_name', None)
+            price = request.GET.get('price', None)  # [0, 5000]
+            tag = request.GET.get('tag', None)  # list
+            large_category = request.GET.get('large_category', None)
+            medium_category = request.GET.get('medium_category', None)
+            small_category = request.GET.get('small_category', None)
+
+        except KeyError:
+            offset = 0
+            limit = 10
+
+        """ Using Query
+        sp_args = {
+            'offset': offset,
+            'limit': limit,
+            'search_keyword': search_keyword,
+            'order': is_order
+        }
+        is_suc, data = call_sp.call_sp_recipe_list_select(sp_args)
+        data = util.preprocessing_list_data(data)
+        """
+
+        try:
+            es = MakeESQuery(
+                search_query=search_keyword,
+                recipe_name=recipe_name,
+                price=price,
+                tag=tag,
+                large_category=large_category,
+                medium_category=medium_category,
+                small_category=small_category,
+                sort_by=sort_by,
+                offset=offset,
+                limit=limit,
+            )
+            es.make_query()
+            data = es.run_query('recipe')
+            data = util.preprocessing_recipe_es_data(data)
+            return Response(status=status.HTTP_200_OK, data=data)
+        except Exception:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
 
 
