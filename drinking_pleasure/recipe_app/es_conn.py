@@ -126,9 +126,10 @@ class MakeESQuery:
         return query
 
     def add_price(self, query):
-        query["query"]["bool"]["must"].append({
+        query["query"]["bool"]["filter"].append({
             "range": {
-                ""
+                "gte": self.price[0],
+                "lte": self.price[1],
             }
         })
         return query
