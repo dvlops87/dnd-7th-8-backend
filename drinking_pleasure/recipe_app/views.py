@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 import recipe_app.util as util
 import recipe_app.call_sp as call_sp
+from recipe_app.es_conn import MakeESQuery
 
 
 JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
@@ -19,13 +20,30 @@ class RecipeView(APIView):
         try:
             offset = request.GET.get('offset', 0)
             limit = request.GET.get('limit', 10)
+
             search_keyword = request.GET.get('search_keyword', None)
+            recipe_name = request.GET.get('recipe_name', None)
+            price = request.GET.get('price', None)  # [0, 5000]
+            tag = request.GET.get('tag', None)  # list
+            large_category = request.GET.get('large_category', None)
+            medium_category = request.GET.get('medium_category', None)
+            small_category = request.GET.get('small_category', None)
+
             is_order = request.GET.get('is_order', None)
+
         except KeyError:
             offset = 0
             limit = 10
-            search_keyword = None
-            is_order = None
+
+        es = MakeESQuery(
+            search_query=search_keyword,
+            recipe_name=recipe_name,
+            price=price,
+            tag=tag,
+            large_category=large_category,
+            medium_category=medium_category,
+            small_category=small_category
+        )
 
         sp_args = {
             'offset': offset,

@@ -1,6 +1,11 @@
 import elasticsearch
-from drinking_pleasure.my_settings import ES
-
+# from drinking_pleasure.my_settings import ES
+ES = {
+    "es_address": {"mz-node-01": "https://43.200.89.230:9200"},
+    "es_port": 9200,
+    "id": "elastic",
+    "pw": "VvIIQp6IUS6UdYiF0_bS"
+}
 
 class MakeESQuery:
     def __init__(self,
@@ -10,7 +15,11 @@ class MakeESQuery:
                  tag=None,  # list
                  large_category=None,  # str
                  medium_category=None,  # str
-                 small_category=None):  # str
+                 small_category=None,  # str
+                 sort_by=None,
+                 offset=0,
+                 limit=10
+                 ):
 
         self.base_query = {
             "query": {
@@ -20,7 +29,9 @@ class MakeESQuery:
                     "filter": [],
                     "must_not": [],
                 }
-            }
+            },
+            "from": offset,
+            "size": limit
         }
         self.search_query = search_query
         self.recipe_name = recipe_name
@@ -29,18 +40,21 @@ class MakeESQuery:
         self.large_category = large_category
         self.medium_category = medium_category
         self.small_category = small_category
+        self.sort_by = sort_by
         self.query = self.make_query()
 
-    def es_conn():
+    def es_conn(self):
         try:
-            cluster = ES['es_address'].values()
+            cluster = list(ES['es_address'].values())
             print(cluster, ES['es_port'])
             es_client = elasticsearch.Elasticsearch(
                 hosts=cluster,
-                port=ES['es_port'],
-                timeout=60,
+                request_timeout=60,
                 max_retries=3,
                 basic_auth=(ES['id'], ES['pw']),
+                ca_certs=False,
+                verify_certs=False,
+                ssl_show_warn=False
             )
 
             return es_client
@@ -60,7 +74,39 @@ class MakeESQuery:
                 ]
             }
         })
-        query["query"]["bool"]["filter"].append({
+        query["query"]["bool"]["should"].append({
+          "nested": {
+            "path": "main_meterial",
+            "query": {
+              "bool": {
+                "filter": [
+                  {
+                    "term": {
+                      "main_meterial.drink_name": self.search_query
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+        query["query"]["bool"]["should"].append({
+          "nested": {
+            "path": "sub_meterial",
+            "query": {
+              "bool": {
+                "filter": [
+                  {
+                    "match": {
+                      "sub_meterial.meterial_name": self.search_query
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+        query["query"]["bool"]["should"].append({
           "nested": {
             "path": "tag_list",
             "query": {
@@ -135,11 +181,24 @@ class MakeESQuery:
                 "main_meterial.small_category": self.small_category
             }
         })
+        return query
+
+    def set_sort(self, query):
+        if self.sort_by:
+            query["sort"] = [
+                { self.sort_by: {"order": "desc"}}
+            ]
+        else:
+            query["sort"] = [
+
+            ]
+        return query
 
     def make_query(self):
         """
         """
         query = self.base_query
+        query = self.set_sort(query)
         if self.search_query:
             query = self.add_search_query(query)
         if self.recipe_name:
@@ -154,6 +213,7 @@ class MakeESQuery:
             query = self.add_medium_category(query)
         if self.small_category:
             query = self.add_small_category(query)
+        return query
 
     def get_query(self):
         return self.query
@@ -170,5 +230,8 @@ class MakeESQuery:
 
 
 if __name__ == '__main__':
-    es = MakeESQuery()
+    es = MakeESQuery(search_query="사콜")
     print(es.get_query())
+
+    re = es.run_query('recipe')
+    print(re)
