@@ -1,11 +1,5 @@
 import elasticsearch
-# from drinking_pleasure.my_settings import ES
-ES = {
-    "es_address": {"mz-node-01": "https://43.200.89.230:9200"},
-    "es_port": 9200,
-    "id": "elastic",
-    "pw": "VvIIQp6IUS6UdYiF0_bS"
-}
+from drinking_pleasure.my_settings import ES
 
 class MakeESQuery:
     def __init__(self,
