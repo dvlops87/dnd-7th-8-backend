@@ -22,4 +22,5 @@ urlpatterns = [
     path('recipe/', include('recipe_app.urls')),
     path('users/', include('user_app.urls')),
     path('drink/', include('drink_app.urls')),
+    path('home/', include('home_app.urls')),
 ]
