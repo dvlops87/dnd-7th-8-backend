@@ -135,22 +135,24 @@ class MakeESQuery:
         return query
 
     def add_tag(self, query):
-        query["query"]["bool"]["filter"].append({
+        tag_query = {
           "nested": {
             "path": "tag_list",
             "query": {
               "bool": {
-                "filter": [
-                  {
-                    "term": {
-                      "tag_list.tags": self.tag
-                    }
-                  }
-                ]
+                "filter": []
               }
             }
           }
-        })
+        }
+        for t in self.tag:
+          tag_query["nested"]["query"]["bool"]["filter"].append({
+            "term": {
+              "tag_list.tag": t
+            }
+          })
+
+        query["query"]["bool"]["filter"].append(tag_query)
         return query
 
     def add_large_category(self, query):
