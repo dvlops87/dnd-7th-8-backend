@@ -40,7 +40,6 @@ class MakeESQuery:
     def es_conn(self):
         try:
             cluster = list(ES['es_address'].values())
-            print(cluster, ES['es_port'])
             es_client = elasticsearch.Elasticsearch(
                 hosts=cluster,
                 request_timeout=60,
