@@ -106,7 +106,7 @@ class DrinkDetail(APIView):
             raise AuthenticationFailed('UnAuthenticated!')
         sql_insert = "call sp_drink_set(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,@o_id,@o_code)"
         sql_cursor(sql_insert,(drink_name,description,calorie,manufacture,price,large_category,medium_category,small_category,img,alcohol,measure,caffeine))
-        return Response({"message": "success create comment"}, status=status.HTTP_201_CREATED)
+        return Response({"message": "success create drink"}, status=status.HTTP_201_CREATED)
 
 
         
@@ -114,6 +114,13 @@ class DrinkDetail(APIView):
 @permission_classes([]) 
 class DrinkReview(APIView):
     def get(self,request, pk):
+        token = request.COOKIES.get('token')
+        if not token :
+            return HttpResponse("User doesn't have token", status=status.HTTP_403_FORBIDDEN)
+        try :
+            payload = jwt.decode(token, JWT_SECRET_KEY, algorithms='HS256')
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('UnAuthenticated!')
         sql = "call sp_drink_comment_select(%s,@o)"
         rows = sql_cursor(sql,(pk,))[1]
         data_list = []
