@@ -137,6 +137,7 @@ class RecipeDetailView(APIView):
             price_score = request.POST.get('price_score')
             sweet_score = request.POST.get('sweet_score')
             alcohol_score = request.POST.get('alcohol_score')
+            tag_list = request.POST.get('tag_list')
             main_meterial = request.POST.get('main_meterial')
             sub_meterial = request.POST.get('sub_meterial')
 
@@ -158,6 +159,7 @@ class RecipeDetailView(APIView):
             'price_score': price_score,
             'sweet_score': sweet_score,
             'alcohol_score': alcohol_score,
+            'tag_list': tag_list,
             'main_meterial': main_meterial_list,
             'sub_meterial': sub_meterial_list,
         }

@@ -92,6 +92,7 @@ def call_sp_recipe_set(sp_args, cursor=None):
                 'price_score': `float`,
                 'sweet_score': `float`,
                 'alcohol_score': `float`,
+                'tag_list': list(str),
                 'main_meterial': `list(int)`,
                 'sub_meterial': `list(int)`,
             }
@@ -108,6 +109,14 @@ def call_sp_recipe_set(sp_args, cursor=None):
     cursor.execute('SELECT @recipe_id')
     recipe_id = cursor.fetchone()
     recipe_id = recipe_id['@recipe_id']
+
+    t_sp = "CALL sp_recipe_tag_set(%(recipe_id)s, %(tag)s, @o);"
+    for tag in sp_args['tag_list']:
+        tag_sp_args = {
+            'recipe_id': recipe_id,
+            'tag': tag,
+        }
+        cursor.execute(t_sp, tag_sp_args)
 
     m_sp = "CALL sp_recipe_main_meterial_set(%(recipe_id)s, %(drink_id)s, @o);"
     for drink_id in sp_args['main_meterial']:
