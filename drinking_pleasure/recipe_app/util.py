@@ -39,6 +39,15 @@ def preprocessing_recipe_data(data):
 
 
 def preprocessing_list_data(data):
+    res = []
+    for i in range(len(data)):
+        res.append(data[i]['meterial_name'])
+
+    data = {
+        "meterial_name": res
+    }
+    return data
+
     for i in range(len(data)):
         img = data[i]['img']
         if img:
