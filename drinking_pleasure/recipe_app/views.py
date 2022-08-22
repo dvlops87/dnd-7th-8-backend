@@ -52,7 +52,7 @@ class RecipeView(APIView):
             search_keyword = request.GET.get('search_keyword', None)
             recipe_name = request.GET.get('recipe_name', None)
             price = request.GET.get('price', None)  # [0, 5000]
-            tag = request.GET.get('tag', None)  # list
+            tag = request.GET.getlist('tag', [])  # list
             large_category = request.GET.get('large_category', None)
             medium_category = request.GET.get('medium_category', None)
             small_category = request.GET.get('small_category', None)
@@ -117,7 +117,7 @@ class RecipeDetailView(APIView):
         try:
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
-            description = request.POST.get('description')
+            description = request.POST.getlist('description')
             img = request.POST.get('img')
             price = request.POST.get('price')
             mesaure_standard = request.POST.get('mesaure_standard')
@@ -126,11 +126,10 @@ class RecipeDetailView(APIView):
             price_score = request.POST.get('price_score')
             sweet_score = request.POST.get('sweet_score')
             alcohol_score = request.POST.get('alcohol_score')
-            tags = request.POST.get('tags')
+            tag_list = request.POST.getlist('tag_list')
             main_meterial = request.POST.get('main_meterial')
             sub_meterial = request.POST.get('sub_meterial')
 
-            tag_list = tags.split(',')
             main_meterial_list = main_meterial.split(',')
             sub_meterial_list = sub_meterial.split(',')
         except KeyError:
