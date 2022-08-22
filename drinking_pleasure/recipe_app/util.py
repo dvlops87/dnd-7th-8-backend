@@ -34,6 +34,11 @@ def preprocessing_recipe_data(data):
     data['tag'] = data['tag'].split(',')
     data['description'] = data['description'].split('<tr>')
 
+    data['diff_score'] = int(data['diff_score'])
+    data['price_score'] = int(data['price_score'])
+    data['sweet_score'] = int(data['sweet_score'])
+    data['alcohol_score'] = int(data['alcohol_score'])
+
     for i in range(len(data['main_meterial_list'])):
         img = data['main_meterial_list'][i]['img']
         if img:

@@ -196,6 +196,8 @@ class RecipeReviewView(APIView):
         }
         is_suc, data = call_sp.call_sp_recipe_review_select(sp_args)
         if is_suc:
+            for d in data:
+                d['score'] = int(d['score'])
             return Response(status=status.HTTP_200_OK, data=data)
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
