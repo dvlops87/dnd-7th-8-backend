@@ -7,12 +7,13 @@ from rest_framework.response import Response
 
 import recipe_app.util as util
 import recipe_app.call_sp as call_sp
+from recipe_app.es_conn import MakeESQuery
 
 
 JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
 
 
-class RecipeView(APIView):
+class RecipeUsingSQLView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
@@ -24,8 +25,6 @@ class RecipeView(APIView):
         except KeyError:
             offset = 0
             limit = 10
-            search_keyword = None
-            is_order = None
 
         sp_args = {
             'offset': offset,
@@ -38,6 +37,48 @@ class RecipeView(APIView):
             data = util.preprocessing_list_data(data)
             return Response(status=status.HTTP_200_OK, data=data)
         else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RecipeView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        try:
+            offset = request.GET.get('offset', 0)
+            limit = request.GET.get('limit', 10)
+            sort_by = request.GET.get('sort_by', None)
+
+            search_keyword = request.GET.get('search_keyword', None)
+            recipe_name = request.GET.get('recipe_name', None)
+            price = request.GET.get('price', None)  # [0, 5000]
+            tag = request.GET.getlist('tag', [])  # list
+            large_category = request.GET.get('large_category', None)
+            medium_category = request.GET.get('medium_category', None)
+            small_category = request.GET.get('small_category', None)
+
+        except KeyError:
+            offset = 0
+            limit = 10
+
+        try:
+            es = MakeESQuery(
+                search_query=search_keyword,
+                recipe_name=recipe_name,
+                price=price,
+                tag=tag,
+                large_category=large_category,
+                medium_category=medium_category,
+                small_category=small_category,
+                sort_by=sort_by,
+                offset=offset,
+                limit=limit,
+            )
+            es.make_query()
+            data = es.run_query('recipe')
+            data = util.preprocessing_recipe_es_data(data)
+            return Response(status=status.HTTP_200_OK, data=data)
+        except Exception:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
 
 
@@ -76,7 +117,7 @@ class RecipeDetailView(APIView):
         try:
             recipe_name = request.POST.get('recipe_name')
             summary = request.POST.get('summary')
-            description = request.POST.get('description')
+            description = request.POST.getlist('description')
             img = request.POST.get('img')
             price = request.POST.get('price')
             mesaure_standard = request.POST.get('mesaure_standard')
@@ -85,6 +126,7 @@ class RecipeDetailView(APIView):
             price_score = request.POST.get('price_score')
             sweet_score = request.POST.get('sweet_score')
             alcohol_score = request.POST.get('alcohol_score')
+            tag_list = request.POST.getlist('tag_list')
             main_meterial = request.POST.get('main_meterial')
             sub_meterial = request.POST.get('sub_meterial')
 
@@ -97,7 +139,7 @@ class RecipeDetailView(APIView):
             'customer_uuid': customer_uuid,
             'recipe_name': recipe_name,
             'summary': summary,
-            'description': description,
+            'description': "<tr>".join(description),
             'img': img,
             'price': price,
             'mesaure_standard': mesaure_standard,
@@ -106,6 +148,7 @@ class RecipeDetailView(APIView):
             'price_score': price_score,
             'sweet_score': sweet_score,
             'alcohol_score': alcohol_score,
+            'tag_list': tag_list,
             'main_meterial': main_meterial_list,
             'sub_meterial': sub_meterial_list,
         }
