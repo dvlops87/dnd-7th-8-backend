@@ -126,10 +126,11 @@ class RecipeDetailView(APIView):
             price_score = request.POST.get('price_score')
             sweet_score = request.POST.get('sweet_score')
             alcohol_score = request.POST.get('alcohol_score')
-            tag_list = request.POST.get('tag_list')
+            tags = request.POST.get('tags')
             main_meterial = request.POST.get('main_meterial')
             sub_meterial = request.POST.get('sub_meterial')
 
+            tag_list = tags.split(',')
             main_meterial_list = main_meterial.split(',')
             sub_meterial_list = sub_meterial.split(',')
         except KeyError:
