@@ -149,7 +149,7 @@ class RecipeDetailView(APIView):
             'customer_uuid': customer_uuid,
             'recipe_name': recipe_name,
             'summary': summary,
-            'description': description,
+            'description': "<tr>".join(description),
             'img': img,
             'price': price,
             'mesaure_standard': mesaure_standard,

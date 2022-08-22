@@ -32,6 +32,7 @@ def preprocessing_recipe_es_data(data_list):
 def preprocessing_recipe_data(data):
     data['img'] = base64.decodebytes(data['img']).decode('latin_1')
     data['tag'] = data['tag'].split(',')
+    data['description'] = data['description'].split('<tr>')
 
     for i in range(len(data['main_meterial_list'])):
         img = data['main_meterial_list'][i]['img']
