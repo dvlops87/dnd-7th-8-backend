@@ -61,17 +61,6 @@ class RecipeView(APIView):
             offset = 0
             limit = 10
 
-        """ Using Query
-        sp_args = {
-            'offset': offset,
-            'limit': limit,
-            'search_keyword': search_keyword,
-            'order': is_order
-        }
-        is_suc, data = call_sp.call_sp_recipe_list_select(sp_args)
-        data = util.preprocessing_list_data(data)
-        """
-
         try:
             es = MakeESQuery(
                 search_query=search_keyword,
