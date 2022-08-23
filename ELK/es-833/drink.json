@@ -1,0 +1,86 @@
+PUT drink
+{
+    "settings": {
+        "number_of_shards": 5,
+        "number_of_replicas": 1,
+        "analysis": {
+            "analyzer": {
+                "my_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "nori_mix",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            },
+            "tokenizer": {
+                "nori_mix": {
+                     "type": "nori_tokenizer",
+                     "decompound_mode": "mixed",
+                     "discard_punctuation": false,
+                     "user_dictionary_rules": [
+                        "차"
+                     ]
+                }
+             }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "drink_id": {
+                "type": "integer"
+            },
+            "drink_name": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                },
+                "analyzer": "my_analyzer"
+            },
+            "img": {
+                "type": "binary"
+            },
+            "price": {
+                "type": "integer"
+            },
+            "large_category": {
+                "type": "keyword"
+            },
+            "medium_category": {
+                "type": "keyword"
+            },
+            "small_category": {
+                "type": "keyword"
+            },
+            "allergies": {
+                "type": "nested",
+                "properties": {
+                    "allergy": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "tag_list": {
+                "type": "nested",
+                "properties": {
+                    "tag": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "alcohol": {
+                "type": "integer"
+            },
+            "like_cnt": {
+                "type": "integer"
+            },
+            "reg_dtime": {
+                "type": "date",
+                "format": "yyyy-MM-dd HH:mm:ss"
+            }
+        }
+    }
+}

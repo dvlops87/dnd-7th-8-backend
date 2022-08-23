@@ -54,9 +54,11 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth',
+    'corsheaders',
 
     'user_app',
     'recipe_app',
+    'drink_app'
 ]
 
 MIDDLEWARE = [
@@ -67,9 +69,24 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:3000',
+    'https://127.0.0.1:3000',
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'http://mazle.ml:3000',
+    'https://mazle.ml:3000',
+    'http://43.200.106.127:3000',
+    'https://43.200.106.127:3000',
+]
+CORS_ALLOW_CREDENTIALS = True
+
+
 ROOT_URLCONF = 'drinking_pleasure.urls'
+
 
 TEMPLATES = [
     {
@@ -113,7 +130,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,

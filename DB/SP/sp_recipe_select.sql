@@ -26,7 +26,9 @@ LAST UPDATE : 2022-08-19
     -- 1. USER 성인 검증
 
     -- 2. recipe 조회
-    SELECT R.`recipe_name`
+    SELECT R.`recipe_id`
+         , R.`recipe_name`
+         , U.`nickname`
          , R.`description`
          , R.`img`
          , R.`price`
@@ -39,6 +41,7 @@ LAST UPDATE : 2022-08-19
          , IFNULL((SELECT GROUP_CONCAT(tag) FROM recipe_tag WHERE recipe_id=i_recipe_id),'') as `tag`
          , (SELECT COUNT(*) FROM recipe_like WHERE recipe_id = i_recipe_id) as `like_cnt`
     FROM recipe AS R
+    LEFT JOIN mazle_user U ON U.customer_uuid = R.customer_uuid
     WHERE R.recipe_id = i_recipe_id;
 
     -- 3. 음료 조회
