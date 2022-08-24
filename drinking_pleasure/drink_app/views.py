@@ -60,7 +60,7 @@ class DrinkGetList(APIView):
 @permission_classes([]) 
 class DrinkDetail(APIView):
     def get(self,request, pk):
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_403_FORBIDDEN)
         try :
@@ -101,7 +101,7 @@ class DrinkDetail(APIView):
         alcohol = request.POST.get['alcohol']
         measure = request.POST.get['measure']
         caffeine = request.POST.get['caffeine']
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_403_FORBIDDEN)
         try :
@@ -118,7 +118,7 @@ class DrinkDetail(APIView):
 @permission_classes([]) 
 class DrinkReview(APIView):
     def get(self,request, pk):
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_403_FORBIDDEN)
         try :
@@ -142,7 +142,7 @@ class DrinkReview(APIView):
     def post(self,request, pk):
         comment = request.GET['comment']
         score = request.GET['score']
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
@@ -155,7 +155,7 @@ class DrinkReview(APIView):
         return Response({"message": "success create comment"}, status=status.HTTP_201_CREATED)
         
     def delete(self,request, pk):
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
@@ -173,7 +173,7 @@ class DrinkReview(APIView):
 @permission_classes([]) 
 class DrinkLike(APIView):
     def post(self,request, pk):
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
@@ -196,7 +196,7 @@ class DrinkLike(APIView):
 @permission_classes([]) 
 class DrinkCommentLike(APIView):
     def post(self,request, pk):
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :

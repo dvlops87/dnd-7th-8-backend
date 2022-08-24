@@ -101,7 +101,7 @@ def logout(request) :
 @csrf_exempt
 def wdrl(request) :
     if request.method == 'POST' :
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
@@ -123,7 +123,7 @@ def wdrl(request) :
 @csrf_exempt
 def update(request) :
     if request.method == 'PUT' :
-        token = request.headers.get('Authorization')
+        token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
         try :
