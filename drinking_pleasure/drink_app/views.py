@@ -29,7 +29,10 @@ JWT_SECRET_KEY = getattr(settings, 'SIMPLE_JWT', None)['SIGNING_KEY']
 class DrinkGetList(APIView):
     def get(self,request):
         # SQL문 사용
-        sql_select = "select * from drink"
+        sql_select = "SELECT * \
+            , IFNULL\
+            ((SELECT AVG(score) FROM drink_comment WHERE drink_id=D.drink_id GROUP BY drink_id),0) AS score\
+            FROM drink D;"
         rows = sql_all_cursor(sql_select)[1]
         data_list = []
         for row in rows:
@@ -47,6 +50,7 @@ class DrinkGetList(APIView):
             data["alcohol"] = row['alcohol']
             data["measure"] = row['measure']
             data["caffeine"] = row['caffeine']
+            data["score"] = row['score']
             data_list.append(data)
         return JsonResponse({'data' : data_list})
 
