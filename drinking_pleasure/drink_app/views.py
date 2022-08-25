@@ -140,8 +140,8 @@ class DrinkReview(APIView):
         return JsonResponse({'data' : data_list})
 
     def post(self,request, pk):
-        comment = request.POST.get['comment']
-        score = request.POST.get['score']
+        comment = request.POST.get('comment')
+        score = request.POST.get('score')
         token = request.headers.get('token')
         if not token :
             return HttpResponse("User doesn't have token", status=status.HTTP_200_OK)
