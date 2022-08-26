@@ -62,12 +62,10 @@ class HotRecipe(APIView):
 class HotReview(APIView):
     def get(self,request):
         # SQL문 사용
-        sql_select = "select count(drink_comment_like.customer_uuid) as like_cnt, drink_comment_like.comment_id \
-            from drink_comment \
-            left join drink_comment_like on drink_comment.comment_id = drink_comment_like.comment_id \
-            group by drink_comment_like.comment_id \
-            order by like_cnt desc \
-            limit 10;"
+        sql_select = "select drink_comment.drink_id, drink.drink_name, drink.img, drink_comment.comment, drink_comment.score \
+            from drink_comment\
+            left join drink on drink_comment.drink_id = drink.drink_id\
+            order by drink_comment.score desc;"
         rows = sql_cursor(sql_select)[1]
         data_list = []
         for row in rows:
