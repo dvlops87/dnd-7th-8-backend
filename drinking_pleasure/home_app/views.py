@@ -70,10 +70,11 @@ class HotReview(APIView):
         data_list = []
         for row in rows:
             data = dict()
-            if row['comment_id'] is None:
-                continue
-            data["comment_id"] = row['comment_id']
-            data["like_cnt"] = row['like_cnt']
+            data["drink_id"] = row['drink_id']
+            data["drink_name"] = row['drink_name']
+            data["img"] = base64.decodebytes(row['img']).decode('latin_1')
+            data["comment"] = row['comment']
+            data["score"] = row['score']
             data_list.append(data)
         return JsonResponse({'data' : data_list})
 
